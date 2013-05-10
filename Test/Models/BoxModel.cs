@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Test.Models
 {
-    [GenerateClientModel]
+    [GenerateClientModel(1.0, GenerateClientModelAttribute.Target.Java, GenerateClientModelAttribute.Target.ObjectiveC)]
     public class BoxModel
     {
         public long DateTicks { get; set; }
