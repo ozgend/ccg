@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Test.Models
 {
-    [GenerateClientModel(GenerateClientModelAttribute.Target.Java)]
+    [GenerateClientModel(1.0, GenerateClientModelAttribute.Target.Java, GenerateClientModelAttribute.Target.ObjectiveC)]
     public class FormModel
     {
         public int Id { get; set; }

@@ -15,8 +15,8 @@ namespace denolk.CCG.Translator
             StringBuilder sb1 = new StringBuilder();
             StringBuilder sb2 = new StringBuilder();
 
-            sb1.AppendFormat("#import <Foundation/Foundation.h> \n\n @interface {0} : NSObject \n", type.Name);
-            sb2.AppendFormat("\n\n #import <{0}.h> \n\n @implementation {0}\n", type.Name);
+            sb1.AppendFormat("#import <Foundation/Foundation.h>\n\n@interface {0} : NSObject\n", type.Name);
+            sb2.AppendFormat("#import <{0}.h>\n\n@implementation {0}\n", type.Name);
             sb2.AppendFormat("@synthesize {0};\n", string.Join(",", properties.Select(p => p.Name)));
 
             foreach (var info in properties)
@@ -25,7 +25,7 @@ namespace denolk.CCG.Translator
                 sb1.Append(prop);
             }
 
-            sb1.AppendFormat("@end");
+            sb1.AppendFormat("@end\n\n");
             sb2.AppendFormat("@end");
 
             return sb1.Append(sb2.ToString()).ToString();
@@ -82,7 +82,7 @@ namespace denolk.CCG.Translator
             }
             else
             {
-                return type.Name;
+                return string.Format("(nonatomic,retain) {0} *", type.Name);
             }
         }
 

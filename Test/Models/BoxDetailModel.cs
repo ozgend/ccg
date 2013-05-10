@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Test.Models
 {
-    [GenerateClientModel]
+    [GenerateClientModel(GenerateClientModelAttribute.Target.Java)]
     public class BoxDetailModel
     {
         public int DataId { get; set; }

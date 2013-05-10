@@ -22,5 +22,6 @@ namespace Test.Models
         public int FlowNo { get; set; }
         public string Summary { get; set; }
         public bool AllowMultiple { get; set; }
+        public FormModel Form { get; set; }
     }
 }
