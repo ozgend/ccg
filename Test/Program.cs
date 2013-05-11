@@ -12,7 +12,12 @@ namespace Test
         static void Main(string[] args)
         {
             Creator creator = new Creator();
-            creator.Create(typeof(Program));
+
+            creator.Create();
+
+            creator.Create("Test.Models");
+
+            creator.Create("Test", true);
         }
     }
 }

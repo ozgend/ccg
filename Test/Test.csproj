@@ -44,6 +44,8 @@
     <Compile Include="Models\BoxDetailModel.cs" />
     <Compile Include="Models\BoxModel.cs" />
     <Compile Include="Models\FormModel.cs" />
+    <Compile Include="Models\InSpaceModel.cs" />
+    <Compile Include="OutSpaceModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -14,32 +14,84 @@ namespace denolk.CCG
 {
     public class Creator
     {
-        public void Create(Type type)
+        private Assembly Ass { get; set; }
+        private int Uid { get; set; }
+
+        /// <summary>
+        /// Creates client models of attributed classes in calling assembly 
+        /// </summary>
+        public void Create()
         {
-            Assembly ass = Assembly.GetAssembly(type);
-            var types = ass.GetTypes().Where(t => Attribute.IsDefined(t, typeof(GenerateClientModelAttribute)));
+            Ass = Assembly.GetCallingAssembly();
+            Create(null, true);
+        }
+
+        /// <summary>
+        /// Creates client models of classes within the specified namespace in calling assembly 
+        /// </summary>
+        /// <param name="namespace">namespace of classes to be translated to client</param>
+        public void Create(string @namespace)
+        {
+            Ass = Assembly.GetCallingAssembly();
+            Create(@namespace, false);
+        }
+
+        /// <summary>
+        /// Creates client models of attributed classes within the specified namespace in calling assembly 
+        /// </summary>
+        /// <param name="namespace">namespace of classes to be translated to client</param>
+        /// <param name="attributedOnly">include only GenerateClientModel attributed classes</param>
+        public void Create(string @namespace, bool attributedOnly)
+        {
+            Uid++;
+
+            if (Ass == null)
+            {
+                Ass = Assembly.GetCallingAssembly();
+            }
+
+            var types = Ass.GetTypes().Where(t => t.IsClass);
+
+            if (!string.IsNullOrEmpty(@namespace))
+            {
+                types = Ass.GetTypes().Where(t => t.Namespace == @namespace);
+            }
+
+            if (attributedOnly)
+            {
+                types = types.Where(t => Attribute.IsDefined(t, typeof(GenerateClientModelAttribute)));
+            }
 
             foreach (var t in types)
             {
-                GenerateClientModelAttribute attribute = Attribute.GetCustomAttribute(t, typeof(GenerateClientModelAttribute)) as GenerateClientModelAttribute;
-                Generate(t, attribute);
+                Generate(t);
             }
         }
 
-        private void Generate(Type type, GenerateClientModelAttribute attribute)
+        private void Generate(Type type)
         {
-            foreach (var target in attribute.Targets)
+            bool hasAttribute = Attribute.IsDefined(type, typeof(GenerateClientModelAttribute));
+            if (hasAttribute)
             {
-                switch (target)
+                GenerateClientModelAttribute attribute = Attribute.GetCustomAttribute(type, typeof(GenerateClientModelAttribute)) as GenerateClientModelAttribute;
+                foreach (var target in attribute.Targets)
                 {
-                    case GenerateClientModelAttribute.Target.Java:
-                        GenerateClassForJava(type);
-                        break;
+                    switch (target)
+                    {
+                        case GenerateClientModelAttribute.Target.Java:
+                            GenerateClassForJava(type);
+                            break;
 
-                    case GenerateClientModelAttribute.Target.ObjectiveC:
-                        GenerateClassForObjectiveC(type);
-                        break;
+                        case GenerateClientModelAttribute.Target.ObjectiveC:
+                            GenerateClassForObjectiveC(type);
+                            break;
+                    }
                 }
+            }
+            else
+            {
+                GenerateClassForJava(type);
+                GenerateClassForObjectiveC(type);
             }
         }
 
@@ -47,14 +99,14 @@ namespace denolk.CCG
         {
             ObjectiveCTranslator translator = new ObjectiveCTranslator();
             var content = translator.Translate(type);
-            Writer.ToFile(content, type.Name, "m");
+            Writer.ToFile(content, type.Name, "m", Uid);
         }
 
         private void GenerateClassForJava(Type type)
         {
             JavaTranslator translator = new JavaTranslator();
             var content = translator.Translate(type);
-            Writer.ToFile(content, type.Name, "java");
+            Writer.ToFile(content, type.Name, "java", Uid);
         }
     }
 }
