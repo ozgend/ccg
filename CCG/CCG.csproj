@@ -45,10 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\GenerateClientModelAttribute.cs" />
-    <Compile Include="Creator.cs" />
+    <Compile Include="Attributes\GenerateClientCodeAttribute.cs" />
+    <Compile Include="ClientCodeGenerator.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Translator\TranslatorBase.cs" />
+    <Compile Include="TranslatedType.cs" />
+    <Compile Include="Translator\ITranslator.cs" />
     <Compile Include="Translator\JavaTranslator.cs" />
     <Compile Include="Translator\ObjectiveCTranslator.cs" />
     <Compile Include="Writer.cs" />

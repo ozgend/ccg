@@ -6,39 +6,45 @@ using System.Text;
 
 namespace denolk.CCG.Translator
 {
-    internal class ObjectiveCTranslator : TranslatorBase
+    internal class ObjectiveCTranslator : ITranslator
     {
-        public override string Translate(Type type)
+        public TranslatedType Translate(Type @class)
         {
-            var properties = type.GetProperties();
+            var properties = @class.GetProperties();
 
             StringBuilder sb1 = new StringBuilder();
             StringBuilder sb2 = new StringBuilder();
 
-            sb1.AppendFormat("#import <Foundation/Foundation.h>\n\n@interface {0} : NSObject\n", type.Name);
-            sb2.AppendFormat("#import <{0}.h>\n\n@implementation {0}\n", type.Name);
+            sb1.AppendFormat("#import <Foundation/Foundation.h>\n\n@interface {0} : NSObject\n", @class.Name);
+            sb2.AppendFormat("#import <{0}.h>\n\n@implementation {0}\n", @class.Name);
             sb2.AppendFormat("@synthesize {0};\n", string.Join(",", properties.Select(p => p.Name)));
 
-            foreach (var info in properties)
+            foreach (var property in properties)
             {
-                var prop = CreateProperty(info);
+                var prop = CreateProperty(property);
                 sb1.Append(prop);
             }
 
             sb1.AppendFormat("@end\n\n");
             sb2.AppendFormat("@end");
 
-            return sb1.Append(sb2.ToString()).ToString();
+            var content = sb1.Append(sb2.ToString()).ToString();
+
+            return new TranslatedType
+            {
+                Name = string.Format("{0}.m", @class.Name),
+                Content = content
+            };
         }
 
-        protected override string CreateProperty(PropertyInfo info)
+        public string CreateProperty(PropertyInfo property)
         {
-            return string.Format("@property{0} {1};\n", GetDestinationType(info), info.Name);
+            return string.Format("@property{0} {1};\n", GetDestinationType(property), property.Name);
         }
 
-        protected override string GetDestinationType(PropertyInfo info)
+        public string GetDestinationType(PropertyInfo property)
         {
-            var type = info.PropertyType;
+            var type = property.PropertyType;
 
             if (typeof(System.Byte) == type)
             {

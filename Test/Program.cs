@@ -11,13 +11,13 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            Creator creator = new Creator();
+            ClientCodeGenerator generator = new ClientCodeGenerator();
 
-            creator.Create();
+            var dict1 = generator.ToDictionary();
 
-            creator.Create("Test.Models");
+            var dict2 = generator.ToDictionary("Test.Models");
 
-            creator.Create("Test", true);
+            var dict3 = generator.ToDictionary("Test", true);
         }
     }
 }

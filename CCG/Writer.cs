@@ -9,13 +9,11 @@ namespace denolk.CCG
 {
     internal class Writer
     {
-        public static void ToFile(string content, string name, string extension, int uid)
+        public static void ToFile(string directory, string name, string content)
         {
-            //todo return archive file as memory stream maybe?
-
-            var folder = string.Format(@"{0}\generated_{1}", Directory.GetCurrentDirectory(), uid);
+            var folder = string.Format(@"{0}\generated", directory);
             Directory.CreateDirectory(folder);
-            var filepath = string.Format(@"{0}\{1}.{2}", folder, name, extension);
+            var filepath = string.Format(@"{0}\{1}", folder, name);
             File.WriteAllText(filepath, content);
         }
     }

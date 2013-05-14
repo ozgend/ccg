@@ -6,15 +6,15 @@ using System.Text;
 
 namespace denolk.CCG.Translator
 {
-    internal class JavaTranslator : TranslatorBase
+    internal class JavaTranslator : ITranslator
     {
-        public override string Translate(Type type)
+        public TranslatedType Translate(Type @class)
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("public class {0} {{\n", type.Name);
+            sb.AppendFormat("public class {0} {{\n", @class.Name);
 
-            foreach (var info in type.GetProperties())
+            foreach (var info in @class.GetProperties())
             {
                 var prop = CreateProperty(info);
                 sb.Append(prop);
@@ -22,17 +22,22 @@ namespace denolk.CCG.Translator
 
             sb.AppendFormat("}}");
 
-            return sb.ToString();
+            var content = sb.ToString();
+            return new TranslatedType
+            {
+                Name = string.Format("{0}.java", @class.Name),
+                Content = content
+            };
         }
 
-        protected override string CreateProperty(PropertyInfo info)
+        public string CreateProperty(PropertyInfo property)
         {
-            return string.Format("public {0} {1};\n", GetDestinationType(info), info.Name);
+            return string.Format("\tpublic {0} {1};\n", GetDestinationType(property), property.Name);
         }
 
-        protected override string GetDestinationType(PropertyInfo info)
+        public string GetDestinationType(PropertyInfo property)
         {
-            var type = info.PropertyType;
+            var type = property.PropertyType;
 
             if (typeof(System.Byte) == type)
             {

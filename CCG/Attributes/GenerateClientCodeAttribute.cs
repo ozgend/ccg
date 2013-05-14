@@ -6,7 +6,7 @@ using System.Text;
 namespace denolk.CCG.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class GenerateClientModelAttribute : Attribute
+    public class GenerateClientCodeAttribute : Attribute
     {
         public enum Target
         {
@@ -16,18 +16,18 @@ namespace denolk.CCG.Attributes
         public double Version { get; set; }
         public Target[] Targets { get; set; }
 
-        public GenerateClientModelAttribute()
+        public GenerateClientCodeAttribute()
             : this(1.0, Target.Java, Target.ObjectiveC)
         {
 
         }
 
-        public GenerateClientModelAttribute(params Target[] targets)
+        public GenerateClientCodeAttribute(params Target[] targets)
             : this(1.0, targets)
         {
         }
 
-        public GenerateClientModelAttribute(double version, params Target[] targets)
+        public GenerateClientCodeAttribute(double version, params Target[] targets)
         {
             this.Version = version;
             this.Targets = targets;
