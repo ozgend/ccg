@@ -47,6 +47,10 @@ namespace denolk.CCG.Translator
             {
                 return "char";
             }
+            else if (typeof(System.DateTime) == type)
+            {
+                return "Date";
+            }
             else if (typeof(System.Decimal) == type)
             {
                 return "double";
@@ -75,7 +79,7 @@ namespace denolk.CCG.Translator
             {
                 return "Object";
             }
-            else if (typeof(IEnumerable<System.Object>) == type)
+            else if (typeof(IEnumerable<System.Object>) == type || typeof(List<System.Object>) == type || type.Name.Equals("List`1") || type.Name.Equals("IEnumerable`1"))
             {
                 return "ArrayList<Object>";
             }

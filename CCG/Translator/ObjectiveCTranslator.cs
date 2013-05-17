@@ -54,6 +54,10 @@ namespace denolk.CCG.Translator
             {
                 return "(nonatomic,readwrite) char";
             }
+            else if (typeof(System.DateTime) == type)
+            {
+                return "(nonatomic,retain) NSDate *";
+            }
             else if (typeof(System.Decimal) == type)
             {
                 return "(nonatomic,retain) NSNumber *";
@@ -82,7 +86,7 @@ namespace denolk.CCG.Translator
             {
                 return "(nonatomic,retain) NSObject *";
             }
-            else if (typeof(IEnumerable<System.Object>) == type)
+            else if (typeof(IEnumerable<System.Object>) == type || typeof(List<System.Object>) == type || type.Name.Equals("List`1") || type.Name.Equals("IEnumerable`1"))
             {
                 return "(nonatomic,retain) NSMutableArray *";
             }

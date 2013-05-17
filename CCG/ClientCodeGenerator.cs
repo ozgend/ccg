@@ -87,7 +87,7 @@ namespace denolk.CCG
 
             if (!string.IsNullOrEmpty(@namespace))
             {
-                types = Ass.GetTypes().Where(t => t.Namespace.StartsWith(@namespace));
+                types = types.Where(t => t.FullName.Contains(@namespace));
             }
 
             if (attributedOnly)
